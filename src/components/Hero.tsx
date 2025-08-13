@@ -53,7 +53,7 @@ const Hero = () => {
 
   const downloadCV = () => {
     const link = document.createElement('a');
-    link.href = '/Nitin_Gavhane_CV.pdf';
+    link.href = '/Nitin_Gavhane_SDE_CV_2025.pdf';
     link.download = 'Nitin_Gavhane_CV.pdf';
     document.body.appendChild(link);
     link.click();
