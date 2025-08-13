@@ -22,7 +22,7 @@ A modern, interactive portfolio built with React, TypeScript, and Tailwind CSS.
 ## 📦 Installation
 
 ```bash
-git clone [https://github.com/your-username/MyPortfolio.git](https://github.com/NitinGavhane/Portfolio.git)
+git clone https://github.com/your-username/MyPortfolio.git
 cd Portfolio
 npm install
 npm run dev
