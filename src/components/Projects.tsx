@@ -54,7 +54,7 @@ const Projects = () => {
       technologies: ["React", "TypeScript", "Tailwind CSS", "TypeScript", "Vite"],
       category: "fullstack",
       github: "https://github.com/NitinGavhane/Portfolio.git",
-      live: "#",
+      live: "https://nitin-gavhane-dev.vercel.app/",
       featured: true,
       stats: { stars: 156, views: "5.2k", commits: 89 },
       gradient: "from-purple-500 via-violet-500 to-indigo-500",
