@@ -1,0 +1,55 @@
+WEBVTT
+
+00:00.000 --> 00:05.000
+Welcome to our comprehensive guide on JDBC CRUD operations in Spring Boot.
+
+00:05.000 --> 00:10.000
+Today we'll build a complete Maven project with database operations.
+
+00:10.000 --> 00:15.000
+JDBC stands for Java Database Connectivity and it's fundamental for data access.
+
+00:15.000 --> 00:20.000
+Let's start by setting up our Spring Boot Maven project structure.
+
+00:20.000 --> 00:25.000
+Add the necessary dependencies: spring-boot-starter-jdbc and your database driver.
+
+00:25.000 --> 00:30.000
+Configure your database connection properties in application.properties.
+
+00:30.000 --> 00:35.000
+Create your entity class to represent the database table structure.
+
+00:35.000 --> 00:40.000
+Now let's implement the CREATE operation using JdbcTemplate.
+
+00:40.000 --> 00:45.000
+The INSERT statement allows us to add new records to the database.
+
+00:45.000 --> 00:50.000
+Next, we'll implement the READ operation to fetch data from the database.
+
+00:50.000 --> 00:55.000
+Use SELECT queries with row mappers to convert results to Java objects.
+
+00:55.000 --> 01:00.000
+The UPDATE operation modifies existing records based on specific conditions.
+
+01:00.000 --> 01:05.000
+Always include a WHERE clause to avoid updating all records accidentally.
+
+01:05.000 --> 01:10.000
+Finally, the DELETE operation removes records from the database.
+
+01:10.000 --> 01:15.000
+Be careful with DELETE statements and always test with small datasets first.
+
+01:15.000 --> 01:20.000
+Error handling and transaction management are crucial for robust applications.
+
+01:20.000 --> 01:25.000
+Use try-catch blocks and consider using @Transactional annotations.
+
+01:25.000 --> 01:30.000
+That completes our JDBC CRUD operations tutorial in Spring Boot! 

@@ -1,0 +1,55 @@
+WEBVTT
+
+00:00.000 --> 00:05.000
+Welcome to Angular: Working with JSON Data in Different Scenarios.
+
+00:05.000 --> 00:10.000
+JSON is the backbone of modern web applications for data exchange.
+
+00:10.000 --> 00:15.000
+Let's explore various ways to handle JSON data in Angular applications.
+
+00:15.000 --> 00:20.000
+First scenario: fetching JSON data from REST APIs using HttpClient.
+
+00:20.000 --> 00:25.000
+Import HttpClientModule and inject HttpClient in your service.
+
+00:25.000 --> 00:30.000
+Use the get method to retrieve data and handle observables properly.
+
+00:30.000 --> 00:35.000
+Second scenario: parsing local JSON files in your Angular project.
+
+00:35.000 --> 00:40.000
+Place JSON files in the assets folder and import them in your components.
+
+00:40.000 --> 00:45.000
+Third scenario: dynamic JSON manipulation and transformation.
+
+00:45.000 --> 00:50.000
+Use JavaScript methods like map, filter, and reduce for data processing.
+
+00:50.000 --> 00:55.000
+Fourth scenario: form data serialization to JSON format.
+
+00:55.000 --> 01:00.000
+Reactive forms make it easy to convert form values to JSON objects.
+
+01:00.000 --> 01:05.000
+Error handling is crucial when working with JSON APIs.
+
+01:05.000 --> 01:10.000
+Implement proper error handling using catchError operator from RxJS.
+
+01:10.000 --> 01:15.000
+Type safety with TypeScript interfaces improves code reliability.
+
+01:15.000 --> 01:20.000
+Define interfaces that match your JSON structure for better development.
+
+01:20.000 --> 01:25.000
+Performance optimization: use OnPush change detection strategy.
+
+01:25.000 --> 01:30.000
+These techniques will help you master JSON handling in Angular applications! 

@@ -1,0 +1,55 @@
+WEBVTT
+
+00:00.000 --> 00:05.000
+Hello and welcome to our deep dive into MongoDB and Node.js interview questions.
+
+00:05.000 --> 00:10.000
+Today we'll cover the most important topics that appear in coding interviews.
+
+00:10.000 --> 00:15.000
+Let's start with MongoDB fundamentals and essential query operations.
+
+00:15.000 --> 00:20.000
+First question: What's the difference between find and findOne methods?
+
+00:20.000 --> 00:25.000
+Find returns a cursor with all matching documents, while findOne returns just one.
+
+00:25.000 --> 00:30.000
+Next, let's discuss indexing strategies for optimal query performance.
+
+00:30.000 --> 00:35.000
+Compound indexes can significantly improve queries on multiple fields.
+
+00:35.000 --> 00:40.000
+Now moving to Node.js - explain the event loop and its importance.
+
+00:40.000 --> 00:45.000
+The event loop handles asynchronous operations without blocking the main thread.
+
+00:45.000 --> 00:50.000
+Here's a common question: How do you handle errors in async/await functions?
+
+00:50.000 --> 00:55.000
+Always use try-catch blocks to properly handle promise rejections.
+
+00:55.000 --> 01:00.000
+Let's talk about MongoDB aggregation pipelines and their use cases.
+
+01:00.000 --> 01:05.000
+Aggregation is powerful for data transformation and complex queries.
+
+01:05.000 --> 01:10.000
+In Node.js, explain middleware in Express and how it works.
+
+01:10.000 --> 01:15.000
+Middleware functions execute during the request-response cycle.
+
+01:15.000 --> 01:20.000
+Finally, discuss connection pooling in MongoDB and why it matters.
+
+01:20.000 --> 01:25.000
+Connection pooling improves performance by reusing database connections.
+
+01:25.000 --> 01:30.000
+These concepts will help you ace your next MongoDB and Node.js interview! 

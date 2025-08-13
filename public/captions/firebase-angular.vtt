@@ -1,0 +1,58 @@
+WEBVTT
+
+00:00.000 --> 00:05.000
+Welcome to From Zero to Firebase: A Hands-On Guide for 2025 Angular Projects.
+
+00:05.000 --> 00:10.000
+Today we'll build a complete Angular application with Firebase integration.
+
+00:10.000 --> 00:15.000
+Firebase provides backend services without managing server infrastructure.
+
+00:15.000 --> 00:20.000
+Let's start by creating a new Firebase project in the Firebase console.
+
+00:20.000 --> 00:25.000
+Enable Firestore database and configure security rules for your application.
+
+00:25.000 --> 00:30.000
+Install Angular Fire library to connect your Angular app with Firebase.
+
+00:30.000 --> 00:35.000
+Configure Firebase credentials in your environment files.
+
+00:35.000 --> 00:40.000
+Initialize Firebase modules in your app.module.ts file.
+
+00:40.000 --> 00:45.000
+Create your first service to interact with Firestore database.
+
+00:45.000 --> 00:50.000
+Implement CRUD operations: Create, Read, Update, and Delete documents.
+
+00:50.000 --> 00:55.000
+Firestore uses collections and documents to organize your data.
+
+00:55.000 --> 01:00.000
+Real-time updates make your application responsive and dynamic.
+
+01:00.000 --> 01:05.000
+Subscribe to Firestore observables to get live data updates.
+
+01:05.000 --> 01:10.000
+Authentication setup allows users to sign in and manage their data.
+
+01:10.000 --> 01:15.000
+Enable Google, email, and other authentication providers in Firebase.
+
+01:15.000 --> 01:20.000
+Secure your Firestore rules based on user authentication status.
+
+01:20.000 --> 01:25.000
+File storage with Firebase Storage for images and documents.
+
+01:25.000 --> 01:30.000
+Deploy your Angular application using Firebase Hosting.
+
+01:30.000 --> 01:35.000
+That's a complete Firebase integration with Angular for 2025! 

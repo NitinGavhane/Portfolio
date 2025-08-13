@@ -1,0 +1,55 @@
+WEBVTT
+
+00:00.000 --> 00:05.000
+Welcome to today's podcast on setting up DeepSeek R1 locally with Ollama.
+
+00:05.000 --> 00:10.000
+I'm excited to show you how to build your own AI web reconnaissance tool in just 10 minutes.
+
+00:10.000 --> 00:15.000
+DeepSeek R1 is a powerful reasoning model that can help with cybersecurity tasks.
+
+00:15.000 --> 00:20.000
+First, let's understand what makes DeepSeek R1 special for reconnaissance work.
+
+00:20.000 --> 00:25.000
+The model excels at analyzing web structures and identifying potential vulnerabilities.
+
+00:25.000 --> 00:30.000
+To get started, you'll need to install Ollama on your local machine.
+
+00:30.000 --> 00:35.000
+Head over to ollama.ai and download the installer for your operating system.
+
+00:35.000 --> 00:40.000
+Once Ollama is installed, open your terminal or command prompt.
+
+00:40.000 --> 00:45.000
+Run the command: ollama pull deepseek-r1 to download the model.
+
+00:45.000 --> 00:50.000
+This might take a few minutes depending on your internet connection.
+
+00:50.000 --> 00:55.000
+While it's downloading, let's set up our web reconnaissance tool structure.
+
+00:55.000 --> 01:00.000
+Create a new directory called ai-recon-tool and navigate into it.
+
+01:00.000 --> 01:05.000
+We'll need to install some Python dependencies for web scraping and analysis.
+
+01:05.000 --> 01:10.000
+Install requests, beautifulsoup4, and the ollama Python library.
+
+01:10.000 --> 01:15.000
+Now let's write our first reconnaissance script using DeepSeek R1.
+
+01:15.000 --> 01:20.000
+The script will analyze website headers and identify security configurations.
+
+01:20.000 --> 01:25.000
+DeepSeek R1's reasoning capabilities make it perfect for this task.
+
+01:25.000 --> 01:30.000
+That's the basic setup! Check out the full article for the complete code examples. 
