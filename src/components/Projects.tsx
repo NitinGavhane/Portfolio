@@ -253,7 +253,7 @@ const Projects = () => {
   );
 
   return (
-    <section id="projects" ref={sectionRef} className={`py-24 ${isDark ? 'bg-gradient-to-b from-dark-900 to-dark-950' : 'bg-gradient-to-b from-white to-gray-50'} relative overflow-hidden transition-colors duration-500`}>
+      <section id="projects" ref={sectionRef} className={`py-24 ${isDark ? 'bg-dark-950' : 'bg-white'} relative overflow-hidden transition-colors duration-500`}>
       {/* Background Elements */}
       <div className={`absolute inset-0 ${isDark ? 'bg-[radial-gradient(circle_at_20%_30%,rgba(14,165,233,0.05),transparent_50%)]' : 'bg-[radial-gradient(circle_at_20%_30%,rgba(14,165,233,0.02),transparent_50%)]'} transition-opacity duration-500`}></div>
       <div className={`absolute inset-0 ${isDark ? 'bg-[radial-gradient(circle_at_80%_70%,rgba(217,70,239,0.05),transparent_50%)]' : 'bg-[radial-gradient(circle_at_80%_70%,rgba(217,70,239,0.02),transparent_50%)]'} transition-opacity duration-500`}></div>

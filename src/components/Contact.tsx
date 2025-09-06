@@ -115,8 +115,8 @@ const Contact = () => {
   ];
 
   return (
-    <section id="contact" ref={sectionRef} className={`py-24 ${isDark ? 'bg-gradient-to-b from-dark-950 to-dark-900' : 'bg-gradient-to-b from-gray-50 to-white'} relative overflow-hidden transition-colors duration-500`}>
-      {/* Background Elements */}
+    <section id="contact" ref={sectionRef} className={`py-24 ${isDark ? 'bg-dark-950' : 'bg-white'} relative overflow-hidden transition-colors duration-500`}>
+    {/* Background Elements */}
       <div className={`absolute inset-0 ${isDark ? 'bg-[radial-gradient(circle_at_30%_40%,rgba(14,165,233,0.05),transparent_50%)]' : 'bg-[radial-gradient(circle_at_30%_40%,rgba(14,165,233,0.02),transparent_50%)]'} transition-opacity duration-500`}></div>
       <div className={`absolute inset-0 ${isDark ? 'bg-[radial-gradient(circle_at_70%_60%,rgba(217,70,239,0.05),transparent_50%)]' : 'bg-[radial-gradient(circle_at_70%_60%,rgba(217,70,239,0.02),transparent_50%)]'} transition-opacity duration-500`}></div>
       

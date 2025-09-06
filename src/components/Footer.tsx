@@ -32,8 +32,9 @@ const Footer = () => {
   };
 
   return (
-    <footer className={`relative ${isDark ? 'bg-gradient-to-b from-dark-900 to-dark-950 border-white/10' : 'bg-gradient-to-b from-gray-50 to-white border-gray-200'} border-t overflow-hidden transition-colors duration-500`}>
-      {/* Background Elements */}
+    <footer className={`relative ${isDark ? 'bg-dark-950' : 'bg-white'} ${isDark ? 'border-white/10' : 'border-gray-200'} border-t overflow-hidden transition-colors duration-500`}>
+
+    {/* Background Elements */}
       <div className={`absolute inset-0 ${isDark ? 'bg-[radial-gradient(circle_at_20%_80%,rgba(14,165,233,0.03),transparent_50%)]' : 'bg-[radial-gradient(circle_at_20%_80%,rgba(14,165,233,0.01),transparent_50%)]'} transition-opacity duration-500`}></div>
       <div className={`absolute inset-0 ${isDark ? 'bg-[radial-gradient(circle_at_80%_20%,rgba(217,70,239,0.03),transparent_50%)]' : 'bg-[radial-gradient(circle_at_80%_20%,rgba(217,70,239,0.01),transparent_50%)]'} transition-opacity duration-500`}></div>
       

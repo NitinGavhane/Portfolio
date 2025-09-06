@@ -63,11 +63,11 @@ const Hero = () => {
   return (
     <section id="hero" className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
       {/* Dynamic Background */}
-      <div className={`absolute inset-0 transition-all duration-1000 ${
-        isDark 
-          ? 'bg-gradient-to-br from-dark-950 via-dark-900 to-dark-950' 
-          : 'bg-gradient-to-br from-white via-gray-50 to-gray-100'
-      }`}>
+        <div className={`absolute inset-0 transition-all duration-1000 ${
+          isDark 
+            ? 'bg-dark-950' 
+            : 'bg-white'
+        }`}>
         <div className={`absolute inset-0 ${
           isDark 
             ? 'bg-[radial-gradient(circle_at_50%_50%,rgba(14,165,233,0.1),transparent_50%)]' 

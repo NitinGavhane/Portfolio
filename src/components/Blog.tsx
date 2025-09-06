@@ -539,8 +539,9 @@ const Blog = () => {
   };
 
   return (
-    <section id="blog" ref={sectionRef} className={`py-24 ${isDark ? 'bg-gradient-to-b from-dark-950 to-dark-900' : 'bg-gradient-to-b from-gray-50 to-white'} relative overflow-hidden transition-colors duration-500`}>
-      {/* Background Elements */}
+    <section id="blog" ref={sectionRef} className={`py-24 ${isDark ? 'bg-dark-950' : 'bg-white'} relative overflow-hidden transition-colors duration-500`}>
+
+    {/* Background Elements */}
       <div className={`absolute inset-0 ${isDark ? 'bg-[radial-gradient(circle_at_40%_20%,rgba(14,165,233,0.05),transparent_50%)]' : 'bg-[radial-gradient(circle_at_40%_20%,rgba(14,165,233,0.02),transparent_50%)]'} transition-opacity duration-500`}></div>
       <div className={`absolute inset-0 ${isDark ? 'bg-[radial-gradient(circle_at_60%_80%,rgba(217,70,239,0.05),transparent_50%)]' : 'bg-[radial-gradient(circle_at_60%_80%,rgba(217,70,239,0.02),transparent_50%)]'} transition-opacity duration-500`}></div>
       

@@ -44,8 +44,9 @@ const EBooks = () => {
   const displayedBooks = ebooks.slice(0, 6);
 
   return (
-    <section id="ebooks" ref={sectionRef} className={`py-24 ${isDark ? 'bg-gradient-to-b from-dark-900 to-dark-950' : 'bg-gradient-to-b from-white to-gray-50'} relative overflow-hidden transition-colors duration-500`}>
-      {/* Background Elements */}
+    <section id="ebooks" ref={sectionRef} className={`py-24 bg-gradient-to-b from-dark-950 to-dark-900 relative overflow-hidden transition-colors duration-500`}>
+
+    {/* Background Elements */}
       <div className={`absolute inset-0 ${isDark ? 'bg-[radial-gradient(circle_at_25%_25%,rgba(14,165,233,0.05),transparent_50%)]' : 'bg-[radial-gradient(circle_at_25%_25%,rgba(14,165,233,0.02),transparent_50%)]'} transition-opacity duration-500`}></div>
       <div className={`absolute inset-0 ${isDark ? 'bg-[radial-gradient(circle_at_75%_75%,rgba(217,70,239,0.05),transparent_50%)]' : 'bg-[radial-gradient(circle_at_75%_75%,rgba(217,70,239,0.02),transparent_50%)]'} transition-opacity duration-500`}></div>
       
