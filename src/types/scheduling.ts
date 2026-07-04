@@ -28,9 +28,8 @@ export interface Booking {
   startTime: string;
   endTime: string;
   timezone: string;
-  status: 'confirmed' | 'cancelled' | 'rescheduled';
+  status: 'confirmed' | 'cancelled';
   createdAt: Date;
-  meetingLink?: string;
 }
 
 export interface AvailabilitySettings {
@@ -45,9 +44,3 @@ export interface AvailabilitySettings {
   allowedDurations: number[]; // minutes
 }
 
-export interface CalendarIntegration {
-  provider: 'google' | 'outlook' | 'apple';
-  isConnected: boolean;
-  calendarId?: string;
-  accessToken?: string;
-}

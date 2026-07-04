@@ -1,7 +1,12 @@
 import { useState, useRef, useEffect } from 'react';
-import { Calendar, Clock, Tag, ArrowRight, TrendingUp, Bookmark, Share2, Eye, ExternalLink, Play, Pause, Volume2, Subtitles } from 'lucide-react';
+import { TrendingUp, Play, Pause, Volume2, Subtitles, ExternalLink } from 'lucide-react';
 import ClickableCard from './ClickableCard';
-import { useTheme } from '../contexts/ThemeContext';
+
+interface Caption {
+  start: number;
+  end: number;
+  text: string;
+}
 
 interface MediumPost {
   id: string;
@@ -16,6 +21,81 @@ interface MediumPost {
   captionsUrl?: string; // Add captions URL field
 }
 
+const predefinedPosts: MediumPost[] = [
+  {
+    id: '1',
+    title: "2025 Guide: Run DeepSeek R1 Locally with Ollama in 10 Minutes — Build Your Own AI Web Recon Tool",
+    excerpt: "Learn how to set up DeepSeek R1 locally using Ollama and build a powerful AI-powered web reconnaissance tool for cybersecurity professionals.",
+    link: "https://nitingavhane.medium.com/2025-guide-run-deepseek-r1-locally-with-ollama-in-10-minutes-build-your-own-ai-web-recon-tool-0816335bc48d",
+    pubDate: "2025-01-15T10:00:00Z",
+    categories: ["AI", "Cybersecurity"],
+    thumbnail: "/DeepSeek-R1.png",
+    readTime: "10 min read",
+    audioUrl: "/prodcast_audio/DeepSeek-R1 Local Setup with Ollama for AI Reconnaissance.wav",
+    captionsUrl: "/captions/deepseek-r1.vtt"
+  },
+  {
+    id: '2',
+    title: "MongoDB and Node.js Coding Round Questions You Need to Know",
+    excerpt: "Essential MongoDB and Node.js interview questions with detailed solutions to help you ace your next coding interview.",
+    link: "https://nitingavhane.medium.com/mongodb-and-node-js-coding-round-questions-you-need-to-know-c13eb2de8b4e",
+    pubDate: "2025-01-12T14:30:00Z",
+    categories: ["Development", "Database"],
+    thumbnail: "/MN.png",
+    readTime: "12 min read",
+    audioUrl: "/prodcast_audio/MongoDB and Node_js Interview Essentials.wav",
+    captionsUrl: "/captions/mongodb-nodejs.vtt"
+  },
+  {
+    id: '3',
+    title: "Node.js Coding Round Success: Must-Know Questions and Solutions",
+    excerpt: "Comprehensive guide to Node.js coding interview questions with practical solutions and best practices for backend development.",
+    link: "https://nitingavhane.medium.com/node-js-coding-round-success-must-know-questions-and-solutions-3f7614d3278b",
+    pubDate: "2025-01-10T09:15:00Z",
+    categories: ["Development", "Backend"],
+    thumbnail: "/Node.png",
+    readTime: "15 min read",
+    audioUrl: "/prodcast_audio/Node_js Interview Questions and Solutions.wav",
+    captionsUrl: "/captions/nodejs-coding.vtt"
+  },
+  {
+    id: '4',
+    title: "JDBC CRUD Operations in Spring Boot Maven Project",
+    excerpt: "Step-by-step tutorial on implementing JDBC CRUD operations in Spring Boot with Maven, including best practices and code examples.",
+    link: "https://nitingavhane.medium.com/jdbc-crud-operations-in-spring-boot-maven-project-3dd564cf5f31",
+    pubDate: "2025-01-08T16:45:00Z",
+    categories: ["Development", "Backend"],
+    thumbnail: "/JDBC.png",
+    readTime: "18 min read",
+    audioUrl: "/prodcast_audio/JDBC CRUD in Spring Boot Maven.wav",
+    captionsUrl: "/captions/jdbc-spring-boot.vtt"
+  },
+  {
+    id: '5',
+    title: "Angular: Working with JSON Data in Different Scenarios",
+    excerpt: "Master JSON data handling in Angular applications with practical examples covering various real-world scenarios and best practices.",
+    link: "https://nitingavhane.medium.com/angular-working-with-json-data-in-different-scenarios-552947e026bc",
+    pubDate: "2025-01-05T11:20:00Z",
+    categories: ["Development", "Frontend"],
+    thumbnail: "/Angulr.png",
+    readTime: "14 min read",
+    audioUrl: "/prodcast_audio/Angular_ JSON Data Scenarios.wav",
+    captionsUrl: "/captions/angular-json.vtt"
+  },
+  {
+    id: '6',
+    title: "From Zero to Firebase: A Hands-On Guide for 2025 Angular Projects",
+    excerpt: "Complete guide to integrating Firebase Firestore with Angular applications, covering setup, CRUD operations, and advanced features.",
+    link: "https://nitingavhane.medium.com/from-zero-to-firestore-a-hands-on-guide-for-2025-angular-projects-1ecc57b6546b",
+    pubDate: "2025-01-03T13:10:00Z",
+    categories: ["Development", "Frontend"],
+    thumbnail: "/Firebase.png",
+    readTime: "20 min read",
+    audioUrl: "/prodcast_audio/Zero to Firestore_ Angular Project Guide.wav",
+    captionsUrl: "/captions/firebase-angular.vtt"
+  }
+];
+
 const Blog = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [mediumPosts, setMediumPosts] = useState<MediumPost[]>([]);
@@ -25,10 +105,9 @@ const Blog = () => {
   const [audioDuration, setAudioDuration] = useState<{ [key: string]: number }>({});
   const [showCaptions, setShowCaptions] = useState<{ [key: string]: boolean }>({});
   const [currentCaption, setCurrentCaption] = useState<{ [key: string]: string }>({});
-  const [loadedCaptions, setLoadedCaptions] = useState<{ [key: string]: any[] }>({});
+  const [loadedCaptions, setLoadedCaptions] = useState<{ [key: string]: Caption[] }>({});
   const audioRefs = useRef<{ [key: string]: HTMLAudioElement }>({});
   const sectionRef = useRef<HTMLDivElement>(null);
-  const { isDark } = useTheme();
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -141,81 +220,6 @@ const Blog = () => {
   };
 
   // Predefined blog posts with correct audio URLs matching actual files
-  const predefinedPosts: MediumPost[] = [
-    {
-      id: '1',
-      title: "2025 Guide: Run DeepSeek R1 Locally with Ollama in 10 Minutes — Build Your Own AI Web Recon Tool",
-      excerpt: "Learn how to set up DeepSeek R1 locally using Ollama and build a powerful AI-powered web reconnaissance tool for cybersecurity professionals.",
-      link: "https://medium.com/@nitinsgavane/2025-guide-run-deepseek-r1-locally-with-ollama-in-10-minutes-build-your-own-ai-web-recon-tool-0816335bc48d",
-      pubDate: "2025-01-15T10:00:00Z",
-      categories: ["AI", "Cybersecurity"],
-      thumbnail: "/DeepSeek-R1.png",
-      readTime: "10 min read",
-      audioUrl: "/prodcast_audio/DeepSeek-R1 Local Setup with Ollama for AI Reconnaissance.wav",
-      captionsUrl: "/captions/deepseek-r1.vtt"
-    },
-    {
-      id: '2',
-      title: "MongoDB and Node.js Coding Round Questions You Need to Know",
-      excerpt: "Essential MongoDB and Node.js interview questions with detailed solutions to help you ace your next coding interview.",
-      link: "https://medium.com/@nitinsgavane/mongodb-and-node-js-coding-round-questions-you-need-to-know-c13eb2de8b4e",
-      pubDate: "2025-01-12T14:30:00Z",
-      categories: ["Development", "Database"],
-      thumbnail: "/MN.png",
-      readTime: "12 min read",
-      audioUrl: "/prodcast_audio/MongoDB and Node_js Interview Essentials.wav",
-      captionsUrl: "/captions/mongodb-nodejs.vtt"
-    },
-    {
-      id: '3',
-      title: "Node.js Coding Round Success: Must-Know Questions and Solutions",
-      excerpt: "Comprehensive guide to Node.js coding interview questions with practical solutions and best practices for backend development.",
-      link: "https://medium.com/@nitinsgavane/node-js-coding-round-success-must-know-questions-and-solutions-3f7614d3278b",
-      pubDate: "2025-01-10T09:15:00Z",
-      categories: ["Development", "Backend"],
-      thumbnail: "/Node.png",
-      readTime: "15 min read",
-      audioUrl: "/prodcast_audio/Node_js Interview Questions and Solutions.wav",
-      captionsUrl: "/captions/nodejs-coding.vtt"
-    },
-    {
-      id: '4',
-      title: "JDBC CRUD Operations in Spring Boot Maven Project",
-      excerpt: "Step-by-step tutorial on implementing JDBC CRUD operations in Spring Boot with Maven, including best practices and code examples.",
-      link: "https://medium.com/@nitinsgavane/jdbc-crud-operations-in-spring-boot-maven-project-3dd564cf5f31",
-      pubDate: "2025-01-08T16:45:00Z",
-      categories: ["Development", "Backend"],
-      thumbnail: "/JDBC.png",
-      readTime: "18 min read",
-      audioUrl: "/prodcast_audio/JDBC CRUD in Spring Boot Maven.wav",
-      captionsUrl: "/captions/jdbc-spring-boot.vtt"
-    },
-    {
-      id: '5',
-      title: "Angular: Working with JSON Data in Different Scenarios",
-      excerpt: "Master JSON data handling in Angular applications with practical examples covering various real-world scenarios and best practices.",
-      link: "https://medium.com/@nitinsgavane/angular-working-with-json-data-in-different-scenarios-552947e026bc",
-      pubDate: "2025-01-05T11:20:00Z",
-      categories: ["Development", "Frontend"],
-      thumbnail: "/Angulr.png",
-      readTime: "14 min read",
-      audioUrl: "/prodcast_audio/Angular_ JSON Data Scenarios.wav",
-      captionsUrl: "/captions/angular-json.vtt"
-    },
-    {
-      id: '6',
-      title: "From Zero to Firebase: A Hands-On Guide for 2025 Angular Projects",
-      excerpt: "Complete guide to integrating Firebase Firestore with Angular applications, covering setup, CRUD operations, and advanced features.",
-      link: "https://medium.com/@nitinsgavane/from-zero-to-firestore-a-hands-on-guide-for-2025-angular-projects-1ecc57b6546b",
-      pubDate: "2025-01-03T13:10:00Z",
-      categories: ["Development", "Frontend"],
-      thumbnail: "/Firebase.png",
-      readTime: "20 min read",
-      audioUrl: "/prodcast_audio/Zero to Firestore_ Angular Project Guide.wav",
-      captionsUrl: "/captions/firebase-angular.vtt"
-    }
-  ];
-
   const displayedPosts = mediumPosts.slice(0, 6);
 
   // 🎵 OPTION 1: Soundcloud-style Waveform (Recommended)
@@ -234,9 +238,9 @@ const Blog = () => {
         <div
           key={i}
           className={`w-0.5 rounded-sm transition-all duration-300 ${
-            isActive 
-              ? 'bg-gradient-to-t from-orange-500 to-orange-400' 
-              : isDark ? 'bg-white/20' : 'bg-gray-300'
+            isActive
+              ? 'bg-[var(--text-primary)]'
+              : 'bg-[var(--border-secondary)]'
           } ${isPlaying && isActive ? 'animate-pulse' : ''}`}
           style={{ 
             height: `${height}%`,
@@ -249,102 +253,6 @@ const Blog = () => {
     return bars;
   };
 
-  // 🌊 OPTION 2: Modern Frequency Bars
-  const generateFrequencyBars = (isPlaying: boolean, progress: number) => {
-    const bars = [];
-    const barCount = 40;
-    
-    for (let i = 0; i < barCount; i++) {
-      // Simulate frequency spectrum
-      const frequency = i / barCount;
-      const lowFreq = Math.exp(-frequency * 3) * 80;
-      const midFreq = Math.exp(-Math.abs(frequency - 0.3) * 8) * 60;
-      const highFreq = Math.exp(-Math.abs(frequency - 0.8) * 10) * 40;
-      const height = Math.max(lowFreq + midFreq + highFreq + Math.random() * 20, 15);
-      const isActive = (i / barCount) * 100 <= progress;
-      
-      bars.push(
-        <div
-          key={i}
-          className={`w-1 rounded-full transition-all duration-500 ${
-            isActive 
-              ? 'bg-gradient-to-t from-cyan-500 via-blue-500 to-purple-500' 
-              : isDark ? 'bg-white/15' : 'bg-gray-300'
-          } ${isPlaying && isActive ? 'animate-bounce' : ''}`}
-          style={{ 
-            height: `${height}%`,
-            animationDelay: `${i * 40}ms`,
-            animationDuration: '0.8s'
-          }}
-        />
-      );
-    }
-    return bars;
-  };
-
-  // ⚡ OPTION 3: Spotify-style Equalizer
-  const generateEqualizerBars = (isPlaying: boolean, progress: number) => {
-    const bars = [];
-    const barCount = 25;
-    
-    for (let i = 0; i < barCount; i++) {
-      const height = 20 + Math.abs(Math.sin(i * 0.3 + (isPlaying ? Date.now() * 0.01 : 0))) * 80;
-      const isActive = (i / barCount) * 100 <= progress;
-      
-      bars.push(
-        <div
-          key={i}
-          className={`w-1.5 rounded-full transition-all duration-200 ${
-            isActive 
-              ? 'bg-gradient-to-t from-green-500 to-green-400' 
-              : isDark ? 'bg-white/20' : 'bg-gray-300'
-          } ${isPlaying ? 'animate-pulse' : ''}`}
-          style={{ 
-            height: `${height}%`,
-            animationDelay: `${i * 80}ms`,
-            animationDuration: '1.5s'
-          }}
-        />
-      );
-    }
-    return bars;
-  };
-
-  // 🎧 OPTION 4: Minimalist Dots
-  const generateDotWaveform = (isPlaying: boolean, progress: number) => {
-    const dots = [];
-    const dotCount = 30;
-    
-    for (let i = 0; i < dotCount; i++) {
-      const size = 2 + Math.sin(i * 0.2) * 2;
-      const isActive = (i / dotCount) * 100 <= progress;
-      
-      dots.push(
-        <div
-          key={i}
-          className={`rounded-full transition-all duration-400 ${
-            isActive 
-              ? 'bg-gradient-to-r from-pink-500 to-violet-500' 
-              : isDark ? 'bg-white/25' : 'bg-gray-400'
-          } ${isPlaying && isActive ? 'animate-ping' : ''}`}
-          style={{ 
-            width: `${size + 2}px`,
-            height: `${size + 2}px`,
-            animationDelay: `${i * 100}ms`,
-            animationDuration: '2s'
-          }}
-        />
-      );
-    }
-    return dots;
-  };
-
-  // Choose your preferred waveform here! 
-  // Change the function name below to try different styles:
-  // - generateSoundCloudWaveform (Orange SoundCloud style)
-  // - generateFrequencyBars (Colorful frequency spectrum)  
-  // - generateEqualizerBars (Green Spotify style)
-  // - generateDotWaveform (Minimalist dots)
   const generateWaveform = generateSoundCloudWaveform;
 
   // Load captions from VTT files
@@ -367,8 +275,8 @@ const Blog = () => {
 
   const parseVTT = (vttText: string) => {
     const lines = vttText.split(/\r?\n/);
-    const captions = [];
-    let currentCaption: any = null;
+    const captions: Caption[] = [];
+    let currentCaption: Caption | null = null;
     let captionText = '';
   
     for (let i = 0; i < lines.length; i++) {
@@ -442,92 +350,89 @@ const Blog = () => {
     const progressPercentage = duration > 0 ? (progress / duration) * 100 : 0;
 
     return (
-      <div className={`mt-3 p-3 ${isDark ? 'bg-white/5 border-white/10' : 'bg-gray-50 border-gray-200'} border rounded-lg transition-all duration-300`}>
+      <div className="mt-3 p-3 bg-[var(--bg-secondary)] border border-[var(--border-primary)]">
         <div className="flex items-center space-x-3">
           <button
             onClick={() => handleAudioPlay(post.id, post.audioUrl!)}
-            className={`flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 ${
-              isPlaying 
-                ? 'bg-gradient-to-r from-red-500 to-pink-500 text-white shadow-glow' 
-                : 'bg-gradient-to-r from-primary-500 to-accent-500 text-white hover:shadow-glow'
-            } hover:scale-110`}
+            className="flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center bg-[var(--text-primary)] text-[var(--bg-primary)] transition-transform duration-300 hover:scale-105"
+            aria-label={isPlaying ? 'Pause audio' : 'Play audio'}
           >
             {isPlaying ? <Pause size={16} /> : <Play size={16} />}
           </button>
-          
+
           <div className="flex-1 min-w-0">
             <div className="flex items-center justify-between mb-1">
               <div className="flex items-center space-x-2">
-                <Volume2 size={14} className="text-primary-500" />
-                <span className={`text-xs font-medium ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
-                  🎧 Podcast Audio
-                </span>
+                <Volume2 size={14} className="text-[var(--text-tertiary)]" />
+                <span className="editorial-label text-[10px]">Podcast Audio</span>
               </div>
               <div className="flex items-center space-x-2">
-                {/* CC Toggle Button */}
+                {/* CC Toggle */}
                 <button
                   onClick={() => toggleCaptions(post.id)}
-                  className={`p-1 rounded transition-all duration-300 ${
+                  className={`p-1 border transition-colors duration-300 ${
                     showCaptions[post.id]
-                      ? 'bg-primary-500 text-white' 
-                      : isDark ? 'bg-white/10 text-gray-400 hover:bg-white/20' : 'bg-gray-200 text-gray-600 hover:bg-gray-300'
+                      ? 'bg-[var(--text-primary)] text-[var(--bg-primary)] border-[var(--text-primary)]'
+                      : 'bg-[var(--bg-primary)] text-[var(--text-tertiary)] border-[var(--border-primary)] hover:border-[var(--border-secondary)]'
                   }`}
                   title="Toggle Captions"
+                  aria-label="Toggle captions"
                 >
                   <Subtitles size={12} />
                 </button>
                 {duration > 0 && (
-                  <span className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'} font-mono`}>
+                  <span className="text-xs text-[var(--text-muted)] font-mono">
                     {formatTime(progress)} / {formatTime(duration)}
                   </span>
                 )}
               </div>
             </div>
-            
-            {/* Dynamic Waveform Visualizer */}
-            <div className={`w-full h-6 ${isDark ? 'bg-white/5' : 'bg-gray-100'} rounded-lg overflow-hidden relative flex items-center justify-center space-x-px px-1`}>
+
+            {/* Waveform */}
+            <div className="w-full h-6 bg-[var(--bg-tertiary)] overflow-hidden relative flex items-center justify-center space-x-px px-1">
               {generateWaveform(isPlaying, progressPercentage)}
             </div>
           </div>
         </div>
 
-        {/* Captions Display */}
+        {/* Captions */}
         {showCaptions[post.id] && (
-          <div className={`mt-3 p-3 ${isDark ? 'bg-black/30 border-white/10' : 'bg-black/80 border-gray-300'} border rounded-lg transition-all duration-300`}>
+          <div className="mt-3 p-3 bg-[var(--text-primary)] text-[var(--bg-primary)]">
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center space-x-2">
-                <Subtitles size={14} className="text-white" />
-                <span className="text-xs font-medium text-white">Live Captions</span>
+                <Subtitles size={14} />
+                <span className="text-xs font-medium uppercase tracking-wider">Live Captions</span>
                 {isPlaying && (
                   <div className="flex space-x-1">
-                    <div className="w-1 h-1 bg-green-400 rounded-full animate-ping"></div>
-                    <div className="w-1 h-1 bg-green-400 rounded-full animate-ping" style={{ animationDelay: '0.2s' }}></div>
-                    <div className="w-1 h-1 bg-green-400 rounded-full animate-ping" style={{ animationDelay: '0.4s' }}></div>
+                    <div className="w-1 h-1 bg-current rounded-full animate-ping"></div>
+                    <div className="w-1 h-1 bg-current rounded-full animate-ping" style={{ animationDelay: '0.2s' }}></div>
+                    <div className="w-1 h-1 bg-current rounded-full animate-ping" style={{ animationDelay: '0.4s' }}></div>
                   </div>
                 )}
               </div>
               <button
                 onClick={() => toggleCaptions(post.id)}
-                className="text-xs text-gray-400 hover:text-white transition-colors"
+                className="text-xs opacity-70 hover:opacity-100 transition-opacity"
+                aria-label="Close captions"
               >
                 ✕
               </button>
             </div>
             <div className={`text-sm leading-relaxed min-h-[3rem] flex items-center ${
-              currentCaption[post.id] ? 'text-white' : isDark ? 'text-gray-500' : 'text-gray-400'
+              currentCaption[post.id] ? '' : 'opacity-50'
             }`}>
               {currentCaption[post.id] || (isPlaying ? 'Listening for speech...' : 'Play audio to see captions')}
             </div>
           </div>
         )}
 
-        {/* Caption Hint - Show when audio is playing but captions are off */}
+        {/* Caption hint */}
         {isPlaying && !showCaptions[post.id] && (
-          <div className={`mt-2 p-2 ${isDark ? 'bg-blue-500/10 border-blue-500/20 text-blue-400' : 'bg-blue-50 border-blue-200 text-blue-600'} border rounded-lg transition-all duration-300`}>
+          <div className="mt-2 p-2 bg-[var(--bg-tertiary)] border border-[var(--border-primary)] text-[var(--text-tertiary)]">
             <div className="flex items-center space-x-2 text-xs">
               <Subtitles size={12} />
               <span>
-                Click the 
+                Click the
                 <Subtitles size={10} className="inline mx-1" />
                 button to enable live captions
               </span>
@@ -539,24 +444,26 @@ const Blog = () => {
   };
 
   return (
-    <section id="blog" ref={sectionRef} className={`py-24 ${isDark ? 'bg-dark-950' : 'bg-white'} relative overflow-hidden transition-colors duration-500`}>
+    <section
+      id="blog"
+      ref={sectionRef}
+      className="bg-[var(--bg-secondary)] border-t border-[var(--border-primary)]"
+    >
+      <div className="max-w-6xl mx-auto px-6 sm:px-8 py-20 sm:py-28">
 
-    {/* Background Elements */}
-      <div className={`absolute inset-0 ${isDark ? 'bg-[radial-gradient(circle_at_40%_20%,rgba(14,165,233,0.05),transparent_50%)]' : 'bg-[radial-gradient(circle_at_40%_20%,rgba(14,165,233,0.02),transparent_50%)]'} transition-opacity duration-500`}></div>
-      <div className={`absolute inset-0 ${isDark ? 'bg-[radial-gradient(circle_at_60%_80%,rgba(217,70,239,0.05),transparent_50%)]' : 'bg-[radial-gradient(circle_at_60%_80%,rgba(217,70,239,0.02),transparent_50%)]'} transition-opacity duration-500`}></div>
-      
-      <div className="container mx-auto px-6">
-        <div className="text-center mb-16 animate-fade-in-up">
-          <div className={`inline-flex items-center space-x-2 px-4 py-2 ${isDark ? 'bg-white/5 border-white/10 text-gray-300' : 'bg-gray-100 border-gray-200 text-gray-600'} backdrop-blur-sm border rounded-full text-sm mb-6 transition-all duration-300`}>
-            <TrendingUp size={16} className="text-primary-500" />
-            <span>Latest from Medium</span>
+        {/* Header */}
+        <div className="grid lg:grid-cols-[1fr_2fr] gap-8 lg:gap-20 items-start mb-16">
+          <div>
+            <p className="editorial-label mb-4 flex items-center gap-2">
+              <TrendingUp size={13} /> Latest from Medium
+            </p>
+            <h2 className="editorial-heading text-4xl sm:text-5xl text-[var(--text-primary)]">
+              Blog &amp; Writing
+            </h2>
           </div>
-          
-          <h2 className={`text-4xl lg:text-5xl font-bold ${isDark ? 'text-white' : 'text-gray-900'} mb-6 transition-colors duration-300`}>
-            Latest <span className="bg-gradient-to-r from-primary-500 to-accent-500 bg-clip-text text-transparent">Blog Posts</span>
-          </h2>
-          <p className={`text-lg ${isDark ? 'text-gray-400' : 'text-gray-600'} max-w-2xl mx-auto leading-relaxed transition-colors duration-300`}>
-            Deep dives into cutting-edge technology, development tutorials, and practical coding solutions from my Medium publication
+          <p className="editorial-body self-end max-w-xl">
+            Deep dives into cutting-edge technology, development tutorials, and
+            practical coding solutions from my Medium publication.
           </p>
         </div>
 
@@ -564,15 +471,15 @@ const Blog = () => {
         {loading && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
             {[...Array(6)].map((_, index) => (
-              <div key={index} className={`${isDark ? 'bg-white/5 border-white/10' : 'bg-gray-100 border-gray-200'} backdrop-blur-sm border rounded-xl overflow-hidden animate-pulse transition-colors duration-300`}>
-                <div className={`h-32 ${isDark ? 'bg-white/10' : 'bg-gray-200'} transition-colors duration-300`}></div>
-                <div className="p-4 space-y-3">
-                  <div className={`h-4 ${isDark ? 'bg-white/10' : 'bg-gray-200'} rounded w-3/4 transition-colors duration-300`}></div>
-                  <div className={`h-3 ${isDark ? 'bg-white/10' : 'bg-gray-200'} rounded w-full transition-colors duration-300`}></div>
-                  <div className={`h-3 ${isDark ? 'bg-white/10' : 'bg-gray-200'} rounded w-2/3 transition-colors duration-300`}></div>
+              <div key={index} className="border border-[var(--border-primary)] overflow-hidden">
+                <div className="h-40 loading-skeleton"></div>
+                <div className="p-5 space-y-3">
+                  <div className="h-4 loading-skeleton rounded w-3/4"></div>
+                  <div className="h-3 loading-skeleton rounded w-full"></div>
+                  <div className="h-3 loading-skeleton rounded w-2/3"></div>
                   <div className="flex justify-between">
-                    <div className={`h-3 ${isDark ? 'bg-white/10' : 'bg-gray-200'} rounded w-1/4 transition-colors duration-300`}></div>
-                    <div className={`h-3 ${isDark ? 'bg-white/10' : 'bg-gray-200'} rounded w-1/4 transition-colors duration-300`}></div>
+                    <div className="h-3 loading-skeleton rounded w-1/4"></div>
+                    <div className="h-3 loading-skeleton rounded w-1/4"></div>
                   </div>
                 </div>
               </div>
@@ -580,14 +487,14 @@ const Blog = () => {
           </div>
         )}
 
-        {/* Blog Posts Grid with Enhanced Cards */}
+        {/* Blog Posts Grid */}
         {!loading && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
             {displayedPosts.map((post, index) => (
               <div
                 key={post.id}
                 className={`${isVisible ? 'animate-fade-in-up' : 'opacity-0'}`}
-                style={{ animationDelay: `${index * 100}ms` }}
+                style={{ animationDelay: `${index * 0.1}s` }}
               >
                 <ClickableCard
                   url={post.link}
@@ -611,51 +518,53 @@ const Blog = () => {
           </div>
         )}
 
-        {/* View All Button */}
+        {/* View All */}
         <div className="text-center mb-16">
-          <ClickableCard
-            url="https://medium.com/@nitinsgavane"
-            title="Explore All Articles"
-            description="Visit my Medium profile to read all published articles, tutorials, and technical insights."
-            category="Medium"
-            variant="default"
-            buttonText="View All Articles"
-            className="max-w-md mx-auto"
-          />
+          <a
+            href="https://nitingavhane.medium.com/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn-outline inline-flex"
+          >
+            View All Articles on Medium
+            <ExternalLink size={13} className="ml-2" />
+          </a>
         </div>
 
-        {/* Newsletter Signup */}
-        <div className={`relative ${isDark ? 'bg-white/5 border-white/10' : 'bg-white border-gray-200 shadow-lg'} backdrop-blur-sm border rounded-2xl p-8 text-center overflow-hidden transition-all duration-300`}>
-          <div className="absolute inset-0 bg-gradient-to-r from-primary-500/10 to-accent-500/10"></div>
-          <div className="relative z-10">
-            <h3 className={`text-2xl font-bold ${isDark ? 'text-white' : 'text-gray-900'} mb-4 transition-colors duration-300`}>
-              Stay Updated with Latest <span className="bg-gradient-to-r from-primary-500 to-accent-500 bg-clip-text text-transparent">Insights</span>
-            </h3>
-            <p className={`${isDark ? 'text-gray-400' : 'text-gray-600'} mb-6 max-w-xl mx-auto transition-colors duration-300`}>
-              Get weekly updates on development tutorials, coding best practices, and exclusive content delivered directly from Medium.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
-              <input
-                type="email"
-                placeholder="Enter your email"
-                className={`flex-1 px-4 py-3 ${isDark ? 'bg-white/10 border-white/20 text-white placeholder-gray-400' : 'bg-gray-50 border-gray-200 text-gray-900 placeholder-gray-500'} backdrop-blur-sm border rounded-xl focus:outline-none focus:border-primary-500 transition-all duration-300`}
-              />
-              <button className="px-6 py-3 bg-gradient-to-r from-primary-500 to-accent-500 text-white font-semibold rounded-xl hover:shadow-glow transition-all duration-300 hover:scale-105">
-                Subscribe
-              </button>
-            </div>
-            <p className={`text-xs ${isDark ? 'text-gray-500' : 'text-gray-600'} mt-4 transition-colors duration-300`}>
-              Or follow me directly on{' '}
-              <a 
-                href="https://medium.com/@nitinsgavane" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="text-primary-400 hover:text-primary-300 transition-colors"
-              >
-                Medium
-              </a>
-            </p>
-          </div>
+        {/* Newsletter */}
+        <div className="border border-[var(--border-primary)] bg-[var(--bg-primary)] p-8 sm:p-12 text-center">
+          <p className="editorial-label mb-4">Newsletter</p>
+          <h3 className="editorial-heading text-2xl sm:text-3xl text-[var(--text-primary)] mb-4">
+            Stay updated with the latest insights
+          </h3>
+          <p className="editorial-body max-w-xl mx-auto mb-8">
+            Weekly updates on development tutorials, coding best practices, and
+            exclusive content delivered directly from Medium.
+          </p>
+          <form
+            className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto"
+            onSubmit={(e) => e.preventDefault()}
+          >
+            <input
+              type="email"
+              placeholder="Enter your email"
+              className="input-minimal flex-1"
+            />
+            <button type="submit" className="btn-primary whitespace-nowrap">
+              Subscribe
+            </button>
+          </form>
+          <p className="text-xs text-[var(--text-muted)] mt-5">
+            Or follow me directly on{' '}
+            <a
+              href="https://nitingavhane.medium.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="editorial-link"
+            >
+              Medium
+            </a>
+          </p>
         </div>
       </div>
     </section>

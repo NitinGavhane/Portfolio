@@ -1,152 +1,279 @@
-import { useState, useEffect } from 'react';
-import { Menu, X, Code, User, Briefcase, BookOpen, Download, Mail, Sparkles, Award } from 'lucide-react';
-import { useTheme } from '../contexts/ThemeContext';
+import { useState, useEffect, useRef } from 'react';
+import { Menu, X } from 'lucide-react';
+import { Link, useLocation } from 'react-router-dom';
 import ThemeToggle from './ThemeToggle';
 
+const navLinks = [
+  { id: 'services',      label: 'Services' },
+  { id: 'projects',      label: 'Work' },
+  { id: 'achievements',  label: 'Security' },
+  { id: 'blog',          label: 'Blog', isRoute: true },
+  { id: 'contact',       label: 'Contact' },
+];
+
 const Header = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
-  const { isDark } = useTheme();
+  const [isMenuOpen, setIsMenuOpen]       = useState(false);
+  const [isScrolled, setIsScrolled]       = useState(false);
+  const [activeSection, setActiveSection] = useState('hero');
+  const [scrollProgress, setScrollProgress] = useState(0);
+  const location = useLocation();
+  const isBlogPage = location.pathname.startsWith('/blog');
+  const observerRef = useRef<IntersectionObserver | null>(null);
 
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
+    const onScroll = () => {
+      setIsScrolled(window.scrollY > 40);
+      const docH  = document.documentElement.scrollHeight - window.innerHeight;
+      setScrollProgress(docH > 0 ? (window.scrollY / docH) * 100 : 0);
     };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
+  useEffect(() => {
+    if (isBlogPage) return;
+    const ids = ['hero', ...navLinks.filter(l => !l.isRoute).map((l) => l.id)];
+    observerRef.current = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) setActiveSection(entry.target.id);
+        });
+      },
+      { threshold: 0.25, rootMargin: '-60px 0px -40% 0px' }
+    );
+    ids.forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) observerRef.current?.observe(el);
+    });
+    return () => observerRef.current?.disconnect();
+  }, [isBlogPage]);
+
+  useEffect(() => {
+    document.body.style.overflow = isMenuOpen ? 'hidden' : '';
+    return () => { document.body.style.overflow = ''; };
+  }, [isMenuOpen]);
+
   const scrollToSection = (id: string) => {
-    const element = document.getElementById(id);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-      setIsMenuOpen(false);
+    if (isBlogPage) {
+      window.location.href = '/#' + id;
+      return;
     }
+    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+    setIsMenuOpen(false);
   };
 
-  const menuItems = [
-    { id: 'about', label: 'About', icon: User },
-    { id: 'skills', label: 'Skills', icon: Code },
-    { id: 'achievements', label: 'Achievements', icon: Award },
-    { id: 'projects', label: 'Projects', icon: Briefcase },
-    { id: 'blog', label: 'Blog', icon: BookOpen },
-    { id: 'ebooks', label: 'eBooks', icon: Download },
-    { id: 'contact', label: 'Contact', icon: Mail },
-  ];
-
   return (
-    <header 
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-700 theme-transition ${
-        isScrolled 
-          ? `${isDark ? 'bg-dark-900/80' : 'bg-white/80'} backdrop-blur-2xl border-b ${isDark ? 'border-white/10' : 'border-gray-200/50'} shadow-luxury` 
-          : 'bg-transparent'
-      }`}
-    >
-      <nav className="container mx-auto px-6 h-20 flex items-center justify-between">
-        {/* Logo */}
-        <div 
-          className="group cursor-pointer"
-          onClick={() => scrollToSection('hero')}
-        >
-          <div className="relative">
-            <div className="absolute inset-0 bg-gradient-to-r from-primary-500 to-accent-500 rounded-2xl blur-xl opacity-75 group-hover:opacity-100 transition-all duration-500 animate-breathe"></div>
-            <div className={`relative bg-gradient-to-r from-primary-500 to-accent-500 bg-clip-text text-transparent text-3xl font-bold font-display flex items-center space-x-2 ${isDark ? '' : 'drop-shadow-sm'}`}>
-              <Sparkles className="text-primary-500 group-hover:animate-spin transition-all duration-500" size={28} />
-              <span className="group-hover:scale-110 transition-transform duration-300">NG</span>
-            </div>
-          </div>
-        </div>
+    <>
+      <header
+        className={`fixed top-0 left-0 right-0 z-50 theme-transition ${
+          isScrolled
+            ? 'bg-[var(--bg-primary)]/90 backdrop-blur-md border-b border-[var(--border-primary)]'
+            : 'bg-transparent'
+        }`}
+        style={{ transition: 'background 0.35s ease, border-color 0.35s ease' }}
+      >
+        <nav className="max-w-6xl mx-auto px-6 sm:px-8 h-16 sm:h-[72px] flex items-center justify-between">
 
-        {/* Desktop Menu */}
-        <ul className="hidden lg:flex items-center space-x-8">
-          {menuItems.map((item) => (
-            <li key={item.id}>
-              <button
-                onClick={() => scrollToSection(item.id)}
-                className={`group relative px-4 py-2 ${isDark ? 'text-gray-300 hover:text-white' : 'text-gray-600 hover:text-gray-900'} transition-all duration-300 font-medium theme-transition`}
-              >
-                <span className="relative z-10">{item.label}</span>
-                <div className={`absolute inset-0 bg-gradient-to-r from-primary-500/20 to-accent-500/20 rounded-xl opacity-0 group-hover:opacity-100 transition-all duration-300 ${isDark ? '' : 'shadow-elegant'}`}></div>
-                <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-primary-500 to-accent-500 group-hover:w-full transition-all duration-500"></div>
-              </button>
-            </li>
-          ))}
-        </ul>
-
-        {/* Theme Toggle & CTA */}
-        <div className="hidden lg:flex items-center space-x-4">
-          <ThemeToggle />
-          <button
-            onClick={() => scrollToSection('contact')}
-            className={`group relative px-6 py-3 bg-gradient-to-r from-primary-500 to-accent-500 text-white font-semibold rounded-2xl overflow-hidden transition-all duration-500 hover:scale-105 ${isDark ? 'shadow-glow' : 'shadow-luxury'}`}
+          <Link
+            to="/"
+            aria-label="Go to top"
+            className="group flex items-center gap-0"
           >
-            <span className="relative z-10">Let's Talk</span>
-            <div className="absolute inset-0 bg-gradient-to-r from-accent-500 to-primary-500 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-            <div className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 animate-shimmer"></div>
-          </button>
-        </div>
+            <span className="font-sans text-sm font-semibold tracking-tight text-[var(--text-primary)] transition-opacity duration-200 group-hover:opacity-50">
+              nitingavhane
+            </span>
+            <span className="font-sans text-sm font-semibold tracking-tight text-[var(--text-muted)] transition-opacity duration-200 group-hover:opacity-30">
+              .com
+            </span>
+          </Link>
 
-        {/* Mobile Menu Button */}
-        <div className="lg:hidden flex items-center space-x-3">
-          <ThemeToggle />
-          <button
-            className={`relative z-50 p-2 ${isDark ? 'text-gray-300 hover:text-white' : 'text-gray-600 hover:text-gray-900'} transition-colors duration-300 theme-transition`}
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            aria-label="Toggle menu"
-          >
-            <div className="relative w-6 h-6">
-              <span className={`absolute inset-0 transition-all duration-500 ${isMenuOpen ? 'rotate-45 translate-y-0' : 'rotate-0 -translate-y-2'}`}>
-                <Menu size={24} className={isMenuOpen ? 'opacity-0' : 'opacity-100'} />
-              </span>
-              <span className={`absolute inset-0 transition-all duration-500 ${isMenuOpen ? 'rotate-0 translate-y-0' : 'rotate-45 translate-y-2'}`}>
-                <X size={24} className={isMenuOpen ? 'opacity-100' : 'opacity-0'} />
-              </span>
-            </div>
-          </button>
-        </div>
-
-        {/* Mobile Menu */}
-        <div className={`fixed inset-0 z-40 lg:hidden transition-all duration-700 ${
-          isMenuOpen ? 'opacity-100 visible' : 'opacity-0 invisible'
-        }`}>
-          <div className={`absolute inset-0 ${isDark ? 'bg-dark-950/95' : 'bg-white/95'} backdrop-blur-2xl theme-transition`} onClick={() => setIsMenuOpen(false)} />
-          <div className={`absolute right-0 top-0 h-full w-80 ${isDark ? 'bg-dark-900/95' : 'bg-white/95'} backdrop-blur-2xl border-l ${isDark ? 'border-white/10' : 'border-gray-200/50'} transform transition-transform duration-700 ${
-            isMenuOpen ? 'translate-x-0' : 'translate-x-full'
-          } shadow-premium theme-transition`}>
-            <div className="pt-24 px-6">
-              <ul className="space-y-4">
-                {menuItems.map((item, index) => {
-                  const Icon = item.icon;
-                  return (
-                    <li key={item.id} className={`transform transition-all duration-700 delay-${index * 100}`}>
-                      <button
-                        onClick={() => scrollToSection(item.id)}
-                        className={`group w-full flex items-center space-x-4 p-4 ${isDark ? 'text-gray-300 hover:text-white hover:bg-white/5' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100/50'} rounded-2xl transition-all duration-300 theme-transition`}
-                      >
-                        <div className={`p-2 bg-gradient-to-r from-primary-500/20 to-accent-500/20 rounded-xl group-hover:from-primary-500/30 group-hover:to-accent-500/30 transition-all duration-300 ${isDark ? '' : 'shadow-elegant'}`}>
-                          <Icon size={20} />
-                        </div>
-                        <span className="font-medium">{item.label}</span>
-                      </button>
-                    </li>
-                  );
-                })}
-              </ul>
-              
-              <div className="mt-8">
+          <div className="hidden md:flex items-center gap-1">
+            {navLinks.map((link) => {
+              if (link.isRoute) {
+                const isActive = location.pathname.startsWith('/blog');
+                return (
+                  <Link
+                    key={link.id}
+                    to="/blog"
+                    className={`
+                      relative px-3 py-1.5 text-[11px] font-medium tracking-[0.1em] uppercase
+                      transition-colors duration-200
+                      ${isActive
+                        ? 'text-[var(--text-primary)]'
+                        : 'text-[var(--text-muted)] hover:text-[var(--text-secondary)]'
+                      }
+                    `}
+                  >
+                    {link.label}
+                    <span
+                      className={`
+                        absolute bottom-0 left-1/2 -translate-x-1/2
+                        w-1 h-1 rounded-full bg-[var(--text-primary)]
+                        transition-all duration-300
+                        ${isActive ? 'opacity-100 scale-100' : 'opacity-0 scale-0'}
+                      `}
+                    />
+                  </Link>
+                );
+              }
+              const isActive = !isBlogPage && activeSection === link.id;
+              return (
                 <button
-                  onClick={() => scrollToSection('contact')}
-                  className={`w-full px-6 py-4 bg-gradient-to-r from-primary-500 to-accent-500 text-white font-semibold rounded-2xl transition-all duration-500 ${isDark ? 'shadow-glow' : 'shadow-luxury'} hover:scale-105`}
+                  key={link.id}
+                  onClick={() => scrollToSection(link.id)}
+                  className={`
+                    relative px-3 py-1.5 text-[11px] font-medium tracking-[0.1em] uppercase
+                    transition-colors duration-200
+                    ${isActive
+                      ? 'text-[var(--text-primary)]'
+                      : 'text-[var(--text-muted)] hover:text-[var(--text-secondary)]'
+                    }
+                  `}
                 >
-                  Let's Talk
+                  {link.label}
+                  <span
+                    className={`
+                      absolute bottom-0 left-1/2 -translate-x-1/2
+                      w-1 h-1 rounded-full bg-[var(--text-primary)]
+                      transition-all duration-300
+                      ${isActive ? 'opacity-100 scale-100' : 'opacity-0 scale-0'}
+                    `}
+                  />
                 </button>
-              </div>
-            </div>
+              );
+            })}
+
+            <span className="w-px h-4 bg-[var(--border-secondary)] mx-2 opacity-50" />
+
+            <button
+              onClick={() => scrollToSection('contact')}
+              className="px-4 py-1.5 text-[11px] font-medium tracking-[0.1em] uppercase text-[var(--bg-primary)] bg-[var(--text-primary)] hover:opacity-90 transition-opacity duration-200"
+            >
+              Book a Call
+            </button>
+
+            <ThemeToggle />
+          </div>
+
+          <div className="flex md:hidden items-center gap-2">
+            <ThemeToggle />
+            <button
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className="w-9 h-9 flex items-center justify-center text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors duration-200"
+              aria-label="Toggle menu"
+              aria-expanded={isMenuOpen}
+            >
+              {isMenuOpen
+                ? <X size={20} strokeWidth={1.5} />
+                : <Menu size={20} strokeWidth={1.5} />
+              }
+            </button>
+          </div>
+        </nav>
+
+        <div
+          className="absolute bottom-0 left-0 h-px bg-[var(--text-primary)] opacity-20 transition-none"
+          style={{ width: `${scrollProgress}%` }}
+        />
+      </header>
+
+      <div
+        className={`
+          fixed inset-0 z-40 md:hidden
+          transition-all duration-500 ease-in-out
+          ${isMenuOpen ? 'opacity-100 visible' : 'opacity-0 invisible pointer-events-none'}
+        `}
+      >
+        <div
+          className="absolute inset-0 bg-[var(--bg-primary)]"
+          onClick={() => setIsMenuOpen(false)}
+        />
+
+        <div className={`
+          relative h-full flex flex-col justify-between px-8 pt-28 pb-12
+          transform transition-transform duration-500 ease-in-out
+          ${isMenuOpen ? 'translate-x-0' : 'translate-x-6'}
+        `}>
+          <nav className="flex flex-col gap-0">
+            {navLinks.map((link, i) => {
+              if (link.isRoute) {
+                const isActive = location.pathname.startsWith('/blog');
+                return (
+                  <Link
+                    key={link.id}
+                    to="/blog"
+                    onClick={() => setIsMenuOpen(false)}
+                    className={`
+                      group flex items-center justify-between
+                      w-full py-5 border-b border-[var(--border-primary)]
+                      text-left transition-all duration-200
+                      ${isActive
+                        ? 'text-[var(--text-primary)]'
+                        : 'text-[var(--text-tertiary)] hover:text-[var(--text-primary)]'
+                      }
+                    `}
+                    style={{
+                      transitionDelay: isMenuOpen ? `${i * 55}ms` : '0ms',
+                      opacity: isMenuOpen ? 1 : 0,
+                      transform: isMenuOpen ? 'translateX(0)' : 'translateX(16px)',
+                      transition: `opacity 0.4s ease ${i * 55}ms, transform 0.4s ease ${i * 55}ms, color 0.2s ease`,
+                    }}
+                  >
+                    <span className="font-serif text-3xl sm:text-4xl leading-none tracking-tight">
+                      {link.label}
+                    </span>
+                    {isActive && (
+                      <span className="editorial-label text-[var(--text-muted)]">current</span>
+                    )}
+                  </Link>
+                );
+              }
+              const isActive = !isBlogPage && activeSection === link.id;
+              return (
+                <button
+                  key={link.id}
+                  onClick={() => scrollToSection(link.id)}
+                  className={`
+                    group flex items-center justify-between
+                    w-full py-5 border-b border-[var(--border-primary)]
+                    text-left transition-all duration-200
+                    ${isActive
+                      ? 'text-[var(--text-primary)]'
+                      : 'text-[var(--text-tertiary)] hover:text-[var(--text-primary)]'
+                    }
+                  `}
+                  style={{
+                    transitionDelay: isMenuOpen ? `${i * 55}ms` : '0ms',
+                    opacity: isMenuOpen ? 1 : 0,
+                    transform: isMenuOpen ? 'translateX(0)' : 'translateX(16px)',
+                    transition: `opacity 0.4s ease ${i * 55}ms, transform 0.4s ease ${i * 55}ms, color 0.2s ease`,
+                  }}
+                >
+                  <span className="font-serif text-3xl sm:text-4xl leading-none tracking-tight">
+                    {link.label}
+                  </span>
+                  {isActive && (
+                    <span className="editorial-label text-[var(--text-muted)]">current</span>
+                  )}
+                </button>
+              );
+            })}
+          </nav>
+
+          <div
+            className="flex items-center justify-between"
+            style={{
+              opacity: isMenuOpen ? 1 : 0,
+              transform: isMenuOpen ? 'translateY(0)' : 'translateY(8px)',
+              transition: `opacity 0.4s ease ${navLinks.length * 55 + 60}ms, transform 0.4s ease ${navLinks.length * 55 + 60}ms`,
+            }}
+          >
+            <p className="editorial-label">nitingavhane.com</p>
+            <p className="editorial-label">{new Date().getFullYear()}</p>
           </div>
         </div>
-      </nav>
-    </header>
+      </div>
+    </>
   );
 };
 

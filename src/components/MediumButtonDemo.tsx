@@ -6,27 +6,27 @@ const MediumButtonDemo = () => {
   const mediumArticles = [
     {
       title: "DeepSeek R1 Guide",
-      url: "https://medium.com/@nitinsgavane/2025-guide-run-deepseek-r1-locally-with-ollama-in-10-minutes-build-your-own-ai-web-recon-tool-0816335bc48d"
+      url: "https://nitingavhane.medium.com/2025-guide-run-deepseek-r1-locally-with-ollama-in-10-minutes-build-your-own-ai-web-recon-tool-0816335bc48d"
     },
     {
       title: "MongoDB Node.js",
-      url: "https://medium.com/@nitinsgavane/mongodb-and-node-js-coding-round-questions-you-need-to-know-c13eb2de8b4e"
+      url: "https://nitingavhane.medium.com/mongodb-and-node-js-coding-round-questions-you-need-to-know-c13eb2de8b4e"
     },
     {
       title: "Node.js Coding Round",
-      url: "https://medium.com/@nitinsgavane/node-js-coding-round-success-must-know-questions-and-solutions-3f7614d3278b"
+      url: "https://nitingavhane.medium.com/node-js-coding-round-success-must-know-questions-and-solutions-3f7614d3278b"
     },
     {
       title: "JDBC CRUD Operations",
-      url: "https://medium.com/@nitinsgavane/jdbc-crud-operations-in-spring-boot-maven-project-3dd564cf5f31"
+      url: "https://nitingavhane.medium.com/jdbc-crud-operations-in-spring-boot-maven-project-3dd564cf5f31"
     },
     {
       title: "Angular JSON Data",
-      url: "https://medium.com/@nitinsgavane/angular-working-with-json-data-in-different-scenarios-552947e026bc"
+      url: "https://nitingavhane.medium.com/angular-working-with-json-data-in-different-scenarios-552947e026bc"
     },
     {
       title: "Firestore Angular Guide",
-      url: "https://medium.com/@nitinsgavane/from-zero-to-firestore-a-hands-on-guide-for-2025-angular-projects-1ecc57b6546b"
+      url: "https://nitingavhane.medium.com/from-zero-to-firestore-a-hands-on-guide-for-2025-angular-projects-1ecc57b6546b"
     }
   ];
 

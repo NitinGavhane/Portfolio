@@ -5,11 +5,16 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "prebuild": "node scripts/generate-sitemap.mjs",
     "build": "vite build",
+    "sitemap": "node scripts/generate-sitemap.mjs",
+    "seed:blog": "node scripts/seed-blog.mjs",
     "lint": "eslint .",
     "preview": "vite preview"
   },
   "dependencies": {
+    "@emailjs/browser": "^4.4.1",
+    "@supabase/supabase-js": "^2.108.1",
     "date-fns": "^3.6.0",
     "emailjs-com": "^3.2.0",
     "lucide-react": "^0.344.0",
@@ -18,7 +23,11 @@
     "react-dom": "^18.3.1",
     "react-hook-form": "^7.57.0",
     "react-hot-toast": "^2.5.2",
+    "react-router-dom": "^7.17.0",
     "zustand": "^4.5.7"
+  },
+  "overrides": {
+    "rollup": "4.52.4"
   },
   "devDependencies": {
     "@eslint/js": "^9.9.1",

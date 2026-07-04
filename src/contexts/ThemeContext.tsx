@@ -17,7 +17,7 @@ export const useTheme = () => {
 };
 
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [isDark, setIsDark] = useState(true);
+  const [isDark, setIsDark] = useState(false);
   const [isInitialized, setIsInitialized] = useState(false);
 
   useEffect(() => {
@@ -34,12 +34,14 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
           const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
           setIsDark(prefersDark);
           // Save the initial preference
-          localStorage.setItem('theme', prefersDark ? 'dark' : 'light');
+          // Default to light for professional appearance regardless of system
+          localStorage.setItem('theme', 'light');
+          setIsDark(false);
         }
-      } catch (error) {
-        // Fallback if localStorage is not available
+      } catch {
+        // Fallback if localStorage is not available — default to light
         console.warn('localStorage not available, using default theme');
-        setIsDark(true);
+        setIsDark(false);
       }
       
       setIsInitialized(true);
@@ -56,7 +58,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         if (!savedTheme) {
           setIsDark(e.matches);
         }
-      } catch (error) {
+      } catch {
         // Fallback if localStorage is not available
         setIsDark(e.matches);
       }
@@ -72,12 +74,9 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     
     try {
       localStorage.setItem('theme', theme);
-    } catch (error) {
+    } catch {
       console.warn('Could not save theme preference to localStorage');
     }
-    
-    // Update CSS custom properties for immediate theme application
-    updateCSSVariables(newIsDark);
   };
 
   const toggleTheme = () => {
@@ -85,44 +84,21 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     setTheme(newTheme);
   };
 
-  const updateCSSVariables = (dark: boolean) => {
-    const root = document.documentElement;
-    
-    if (dark) {
-      // Dark theme variables
-      root.style.setProperty('--bg-primary', '#020617');
-      root.style.setProperty('--bg-secondary', '#0f172a');
-      root.style.setProperty('--bg-tertiary', '#1e293b');
-      root.style.setProperty('--text-primary', '#ffffff');
-      root.style.setProperty('--text-secondary', '#cbd5e1');
-      root.style.setProperty('--text-tertiary', '#94a3b8');
-      root.style.setProperty('--border-primary', 'rgba(255, 255, 255, 0.1)');
-      root.style.setProperty('--border-secondary', 'rgba(255, 255, 255, 0.2)');
-    } else {
-      // Light theme variables
-      root.style.setProperty('--bg-primary', '#ffffff');
-      root.style.setProperty('--bg-secondary', '#f8fafc');
-      root.style.setProperty('--bg-tertiary', '#f1f5f9');
-      root.style.setProperty('--text-primary', '#0f172a');
-      root.style.setProperty('--text-secondary', '#334155');
-      root.style.setProperty('--text-tertiary', '#64748b');
-      root.style.setProperty('--border-primary', 'rgba(0, 0, 0, 0.1)');
-      root.style.setProperty('--border-secondary', 'rgba(0, 0, 0, 0.2)');
-    }
-  };
-
-  // Update CSS variables when theme changes
+  // Keep the `.dark` class on <html> in sync so Tailwind `dark:` variants and the
+  // monochrome editorial tokens in index.css (the single source of truth) both apply.
   useEffect(() => {
     if (isInitialized) {
-      updateCSSVariables(isDark);
+      const root = document.documentElement;
+      root.classList.toggle('dark', isDark);
+      root.classList.toggle('light', !isDark);
     }
   }, [isDark, isInitialized]);
 
   // Prevent flash of unstyled content
   if (!isInitialized) {
     return (
-      <div className="fixed inset-0 bg-dark-950 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-500"></div>
+      <div className="fixed inset-0 bg-white flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
       </div>
     );
   }

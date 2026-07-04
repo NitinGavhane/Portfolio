@@ -35,7 +35,7 @@ export interface MediumFeedResponse {
 
 /**
  * Fetches Medium posts from RSS feed using RSS2JSON service
- * @param username - Medium username (e.g., 'nitinsgavane')
+ * @param username - Medium username (e.g., 'nitingavhane')
  * @param count - Number of posts to fetch (default: 10)
  * @returns Promise<MediumPost[]>
  */
@@ -235,7 +235,7 @@ export const formatPostDate = (dateString: string): string => {
       day: 'numeric',
       year: 'numeric'
     });
-  } catch (error) {
+  } catch {
     return 'Recent';
   }
 };

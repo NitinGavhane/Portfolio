@@ -10,7 +10,7 @@ const ClickableCardDemo = () => {
       description: "Learn how to set up DeepSeek R1 locally using Ollama and build a powerful AI-powered web reconnaissance tool for cybersecurity professionals.",
       image: "https://images.pexels.com/photos/3184292/pexels-photo-3184292.jpeg?auto=compress&cs=tinysrgb&w=400",
       category: "AI",
-      url: "https://medium.com/@nitinsgavane/2025-guide-run-deepseek-r1-locally-with-ollama-in-10-minutes-build-your-own-ai-web-recon-tool-0816335bc48d",
+      url: "https://nitingavhane.medium.com/2025-guide-run-deepseek-r1-locally-with-ollama-in-10-minutes-build-your-own-ai-web-recon-tool-0816335bc48d",
       metadata: {
         date: "Jan 15, 2025",
         readTime: "10 min read",
@@ -138,7 +138,7 @@ const ClickableCardDemo = () => {
           <h2 className="text-2xl font-bold text-white mb-8">Text-Only Cards</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <ClickableCard
-              url="https://medium.com/@nitinsgavane/mongodb-and-node-js-coding-round-questions-you-need-to-know-c13eb2de8b4e"
+              url="https://nitingavhane.medium.com/mongodb-and-node-js-coding-round-questions-you-need-to-know-c13eb2de8b4e"
               title="MongoDB and Node.js Coding Questions"
               description="Essential MongoDB and Node.js interview questions with detailed solutions to help you ace your next coding interview."
               category="Database"
@@ -150,7 +150,7 @@ const ClickableCardDemo = () => {
             />
             
             <ClickableCard
-              url="https://medium.com/@nitinsgavane/node-js-coding-round-success-must-know-questions-and-solutions-3f7614d3278b"
+              url="https://nitingavhane.medium.com/node-js-coding-round-success-must-know-questions-and-solutions-3f7614d3278b"
               title="Node.js Coding Round Success"
               description="Comprehensive guide to Node.js coding interview questions with practical solutions and best practices."
               category="Backend"

@@ -1,0 +1,4 @@
+# Google AdSense — replace the publisher id below with your own ca-pub id
+# (without the "ca-" prefix) once your AdSense account is approved.
+# Example:
+# google.com, pub-0000000000000000, DIRECT, f08c47fec0942fa0

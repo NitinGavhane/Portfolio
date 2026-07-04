@@ -1,11 +1,10 @@
-import React from 'react';
+import { useState } from 'react';
 import { format, addDays, startOfWeek, isSameDay, isToday, isBefore, startOfDay } from 'date-fns';
 import { ChevronLeft, ChevronRight, Clock, Calendar as CalendarIcon } from 'lucide-react';
-import { useTheme } from '../../contexts/ThemeContext';
 import { useSchedulingStore } from '../../stores/schedulingStore';
+import type { TimeSlot } from '../../types/scheduling';
 
 const CalendarView: React.FC = () => {
-  const { isDark } = useTheme();
   const {
     selectedDate,
     timeSlots,
@@ -14,7 +13,7 @@ const CalendarView: React.FC = () => {
     setBookingModalOpen
   } = useSchedulingStore();
 
-  const [currentWeek, setCurrentWeek] = React.useState(startOfWeek(new Date()));
+  const [currentWeek, setCurrentWeek] = useState(startOfWeek(new Date()));
 
   const weekDays = Array.from({ length: 7 }, (_, i) => addDays(currentWeek, i));
   const availableSlots = timeSlots.filter(slot => slot.isAvailable);
@@ -23,82 +22,65 @@ const CalendarView: React.FC = () => {
     setSelectedDate(date);
   };
 
-  const handleTimeSlotSelect = (slot: any) => {
+  const handleTimeSlotSelect = (slot: TimeSlot) => {
     setSelectedTimeSlot(slot);
     setBookingModalOpen(true);
   };
 
   const navigateWeek = (direction: 'prev' | 'next') => {
-    const newWeek = addDays(currentWeek, direction === 'next' ? 7 : -7);
-    setCurrentWeek(newWeek);
+    setCurrentWeek(addDays(currentWeek, direction === 'next' ? 7 : -7));
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-5">
       {/* Week Navigation */}
       <div className="flex items-center justify-between">
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center gap-2">
           <button
             onClick={() => navigateWeek('prev')}
-            className={`p-1 rounded-lg ${
-              isDark ? 'hover:bg-white/10 text-gray-400 hover:text-white' : 'hover:bg-gray-100 text-gray-600 hover:text-gray-900'
-            } transition-all duration-200`}
+            className="w-7 h-7 flex items-center justify-center text-[var(--text-tertiary)] hover:text-[var(--text-primary)] transition-colors"
           >
             <ChevronLeft size={16} />
           </button>
-          
-          <h3 className={`text-sm font-semibold ${
-            isDark ? 'text-white' : 'text-gray-900'
-          }`}>
-            {format(currentWeek, 'MMM yyyy')}
-          </h3>
-          
+          <span className="text-sm font-medium text-[var(--text-primary)]">
+            {format(currentWeek, 'MMMM yyyy')}
+          </span>
           <button
             onClick={() => navigateWeek('next')}
-            className={`p-1 rounded-lg ${
-              isDark ? 'hover:bg-white/10 text-gray-400 hover:text-white' : 'hover:bg-gray-100 text-gray-600 hover:text-gray-900'
-            } transition-all duration-200`}
+            className="w-7 h-7 flex items-center justify-center text-[var(--text-tertiary)] hover:text-[var(--text-primary)] transition-colors"
           >
             <ChevronRight size={16} />
           </button>
         </div>
-
-        <div className="flex items-center space-x-2 text-xs">
-          <div className="flex items-center space-x-1">
-            <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-            <span className={isDark ? 'text-gray-400' : 'text-gray-600'}>Available</span>
-          </div>
+        <div className="flex items-center gap-1.5 text-xs text-[var(--text-tertiary)]">
+          <div className="w-2 h-2 rounded-full bg-[var(--text-muted)]" />
+          <span>Available</span>
         </div>
       </div>
 
       {/* Calendar Grid */}
       <div className="grid grid-cols-7 gap-1">
-        {/* Day Headers */}
         {weekDays.map((day) => (
           <div key={day.toISOString()} className="text-center">
-            <div className={`text-xs font-medium ${
-              isDark ? 'text-gray-400' : 'text-gray-600'
-            } mb-1`}>
+            <div className="text-xs text-[var(--text-tertiary)] mb-1">
               {format(day, 'EEE')}
             </div>
             <button
               onClick={() => handleDateSelect(day)}
               disabled={isBefore(day, startOfDay(new Date()))}
-              className={`w-full p-2 rounded-lg text-center transition-all duration-200 ${
+              className={`w-full pt-2 pb-1 text-center transition-colors duration-200 ${
                 isSameDay(day, selectedDate)
-                  ? 'bg-gradient-to-r from-primary-500 to-accent-500 text-white shadow-glow'
+                  ? 'bg-[var(--text-primary)] text-[var(--bg-primary)]'
                   : isToday(day)
-                  ? `${isDark ? 'bg-white/10 border-white/20 text-white' : 'bg-gray-100 border-gray-300 text-gray-900'} border`
+                  ? 'border border-[var(--border-primary)] text-[var(--text-primary)]'
                   : isBefore(day, startOfDay(new Date()))
-                  ? `${isDark ? 'bg-white/5 text-gray-600' : 'bg-gray-50 text-gray-400'} cursor-not-allowed`
-                  : `${isDark ? 'bg-white/5 border-white/10 text-gray-300 hover:bg-white/10 hover:text-white' : 'bg-gray-50 border-gray-200 text-gray-700 hover:bg-gray-100 hover:text-gray-900'} border hover:border-primary-500/30`
+                  ? 'text-[var(--text-muted)] cursor-not-allowed'
+                  : 'text-[var(--text-primary)] hover:bg-[var(--bg-tertiary)]'
               }`}
             >
-              <div className="text-sm font-semibold">{format(day, 'd')}</div>
+              <div className="text-sm font-medium">{format(day, 'd')}</div>
               {isSameDay(day, selectedDate) && (
-                <div className="text-xs mt-0.5 opacity-80">
-                  {availableSlots.length}
-                </div>
+                <div className="text-[10px] mt-0.5 opacity-60">{availableSlots.length}</div>
               )}
             </button>
           </div>
@@ -108,12 +90,10 @@ const CalendarView: React.FC = () => {
       {/* Time Slots */}
       {isSameDay(selectedDate, new Date()) || !isBefore(selectedDate, startOfDay(new Date())) ? (
         <div className="space-y-3">
-          <div className="flex items-center space-x-2">
-            <Clock size={16} className="text-primary-500" />
-            <h4 className={`text-sm font-semibold ${
-              isDark ? 'text-white' : 'text-gray-900'
-            }`}>
-              {format(selectedDate, 'MMM d')} - Available Times
+          <div className="flex items-center gap-2">
+            <Clock size={14} className="text-[var(--text-tertiary)]" />
+            <h4 className="text-sm font-medium text-[var(--text-primary)]">
+              {format(selectedDate, 'MMM d')} — Available Times
             </h4>
           </div>
 
@@ -123,31 +103,23 @@ const CalendarView: React.FC = () => {
                 <button
                   key={slot.id}
                   onClick={() => handleTimeSlotSelect(slot)}
-                  className={`p-2 rounded-lg text-center text-xs font-medium transition-all duration-200 ${
-                    isDark 
-                      ? 'bg-white/5 border-white/10 text-gray-300 hover:bg-primary-500/20 hover:border-primary-500/30 hover:text-primary-300'
-                      : 'bg-gray-50 border-gray-200 text-gray-700 hover:bg-primary-50 hover:border-primary-200 hover:text-primary-700'
-                  } border hover:scale-105`}
+                  className="py-2 text-xs font-medium border border-[var(--border-primary)] text-[var(--text-primary)] hover:bg-[var(--bg-tertiary)] hover:border-[var(--border-secondary)] transition-colors duration-200"
                 >
                   {slot.startTime}
                 </button>
               ))}
             </div>
           ) : (
-            <div className={`text-center py-6 ${
-              isDark ? 'text-gray-400' : 'text-gray-600'
-            }`}>
-              <CalendarIcon size={32} className="mx-auto mb-2 opacity-50" />
+            <div className="text-center py-8 text-[var(--text-tertiary)]">
+              <CalendarIcon size={28} className="mx-auto mb-2 opacity-50" />
               <p className="text-xs font-medium mb-1">No available slots</p>
               <p className="text-xs">Try a different date</p>
             </div>
           )}
         </div>
       ) : (
-        <div className={`text-center py-6 ${
-          isDark ? 'text-gray-400' : 'text-gray-600'
-        }`}>
-          <CalendarIcon size={32} className="mx-auto mb-2 opacity-50" />
+        <div className="text-center py-8 text-[var(--text-tertiary)]">
+          <CalendarIcon size={28} className="mx-auto mb-2 opacity-50" />
           <p className="text-xs font-medium mb-1">Select a future date</p>
           <p className="text-xs">Choose from today onwards</p>
         </div>

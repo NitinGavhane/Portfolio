@@ -1,6 +1,13 @@
 import { create } from 'zustand';
 import { addDays, addMinutes, format, isAfter, isBefore, isToday, startOfDay } from 'date-fns';
+import emailjs from '@emailjs/browser';
+import { supabase, isSupabaseConfigured } from '../lib/supabase';
 import type { TimeSlot, Booking, AvailabilitySettings, BookingFormData } from '../types/scheduling';
+
+// ── EmailJS config ────────────────────────────────────────────────────────────
+const EMAILJS_SERVICE_ID  = 'service_9100ozj';
+const EMAILJS_TEMPLATE_ID = 'template_efy4x7n';
+const EMAILJS_PUBLIC_KEY  = 'VsZ8BsNajLupj5uWM';
 
 interface SchedulingState {
   // Settings
@@ -133,11 +140,35 @@ export const useSchedulingStore = create<SchedulingState>((set, get) => ({
 
   createBooking: async (data: BookingFormData) => {
     set({ isLoading: true });
-    
+
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
+      const endTime = format(
+        addMinutes(new Date(`2000-01-01T${data.timeSlot.startTime}`), data.duration),
+        'HH:mm'
+      );
+
+      // ── Send email notification via EmailJS ──────────────────────────────
+      await emailjs.send(
+        EMAILJS_SERVICE_ID,
+        EMAILJS_TEMPLATE_ID,
+        {
+          // Caller details
+          from_name:    data.name,
+          from_email:   data.email,
+          phone:        data.phone || 'Not provided',
+          purpose:      data.purpose,
+          // Meeting details
+          meeting_date: format(data.timeSlot.date, 'EEEE, MMMM d, yyyy'),
+          start_time:   data.timeSlot.startTime,
+          end_time:     endTime,
+          duration:     `${data.duration} minutes`,
+          timezone:     data.timezone,
+          // Reply-to so Nitin can reply directly to the client
+          reply_to:     data.email,
+        },
+        EMAILJS_PUBLIC_KEY
+      );
+
       const booking: Booking = {
         id: `booking-${Date.now()}`,
         name: data.name,
@@ -147,12 +178,29 @@ export const useSchedulingStore = create<SchedulingState>((set, get) => ({
         duration: data.duration,
         date: data.timeSlot.date,
         startTime: data.timeSlot.startTime,
-        endTime: format(addMinutes(new Date(`2000-01-01T${data.timeSlot.startTime}`), data.duration), 'HH:mm'),
+        endTime,
         timezone: data.timezone,
         status: 'confirmed',
         createdAt: new Date(),
-        meetingLink: 'https://meet.google.com/abc-defg-hij' // Mock meeting link
       };
+
+      // Persist to Supabase
+      if (isSupabaseConfigured) {
+        try {
+          await supabase.from('bookings').insert({
+            name: data.name,
+            email: data.email,
+            phone: data.phone || '',
+            date: format(data.timeSlot.date, 'yyyy-MM-dd'),
+            time: data.timeSlot.startTime,
+            duration: data.duration,
+            purpose: data.purpose,
+            status: 'confirmed',
+          });
+        } catch (err) {
+          console.error('[Supabase] Failed to save booking:', err);
+        }
+      }
 
       set(state => ({
         bookings: [...state.bookings, booking],
@@ -162,9 +210,15 @@ export const useSchedulingStore = create<SchedulingState>((set, get) => ({
 
       // Regenerate time slots to reflect the new booking
       get().generateTimeSlots(data.timeSlot.date);
-      
-    } catch (error) {
-      console.error('Failed to create booking:', error);
+
+    } catch (error: unknown) {
+      // Surface the real EmailJS error in the console for diagnosis
+      if (error && typeof error === 'object' && 'status' in error && 'text' in error) {
+        const ejsErr = error as { status: number; text: string };
+        console.error(`[EmailJS] status=${ejsErr.status} text="${ejsErr.text}"`);
+      } else {
+        console.error('[Booking] Unexpected error:', error);
+      }
       throw error;
     } finally {
       set({ isLoading: false });
@@ -175,8 +229,14 @@ export const useSchedulingStore = create<SchedulingState>((set, get) => ({
     set({ isLoading: true });
     
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 500));
+      // Update in Supabase
+      if (isSupabaseConfigured) {
+        try {
+          await supabase.from('bookings').update({ status: 'cancelled' }).eq('id', bookingId);
+        } catch (err) {
+          console.error('[Supabase] Failed to cancel booking:', err);
+        }
+      }
       
       set(state => ({
         bookings: state.bookings.map(booking =>
