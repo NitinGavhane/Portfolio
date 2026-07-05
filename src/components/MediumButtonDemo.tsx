@@ -1,4 +1,3 @@
-import React from 'react';
 import MediumButton from './MediumButton';
 
 const MediumButtonDemo = () => {

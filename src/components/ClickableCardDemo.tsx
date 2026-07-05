@@ -1,4 +1,3 @@
-import React from 'react';
 import ClickableCard from './ClickableCard';
 import { Star, Download, Code, Shield } from 'lucide-react';
 
