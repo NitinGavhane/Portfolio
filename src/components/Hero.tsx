@@ -1,6 +1,19 @@
 import { useState, useEffect } from 'react';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Github, Linkedin, Twitter } from 'lucide-react';
 import SchedulingModal from './scheduling/SchedulingModal';
+
+// lucide-react has no Medium glyph — inline the official monochrome mark.
+const MediumIcon = ({ size = 16 }: { size?: number }) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="currentColor"
+    aria-hidden="true"
+  >
+    <path d="M13.54 12a6.8 6.8 0 0 1-6.77 6.82A6.8 6.8 0 0 1 0 12a6.8 6.8 0 0 1 6.77-6.82A6.8 6.8 0 0 1 13.54 12zM20.96 12c0 3.54-1.51 6.42-3.38 6.42-1.87 0-3.39-2.88-3.39-6.42s1.52-6.42 3.39-6.42 3.38 2.88 3.38 6.42M24 12c0 3.17-.53 5.75-1.19 5.75-.66 0-1.19-2.58-1.19-5.75s.53-5.75 1.19-5.75C23.47 6.25 24 8.83 24 12z" />
+  </svg>
+);
 
 const SERVICES = [
   'Web Application Development',
@@ -77,27 +90,24 @@ const Hero = () => {
             builds secure digital products for growing businesses.
           </p>
 
-          {/* Social links — jonnyczar "Behance — LinkedIn — Medium" style */}
-          <div className="flex flex-wrap items-center gap-x-4 gap-y-2 mb-10">
+          {/* Social links — icon buttons */}
+          <div className="flex flex-wrap items-center gap-3 mb-10">
             {[
-              { label: 'GitHub', href: 'https://github.com/NitinGavhane' },
-              { label: 'LinkedIn', href: 'https://www.linkedin.com/in/nitinsgavhane/' },
-              { label: 'Twitter', href: 'https://x.com/NitinGavhane_' },
-              { label: 'Medium', href: 'https://nitingavhane.medium.com/' },
-            ].map((link, i, arr) => (
-              <span key={link.label} className="flex items-center gap-4">
-                <a
-                  href={link.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-sm text-[var(--text-tertiary)] hover:text-[var(--text-primary)] transition-colors duration-200 tracking-wide"
-                >
-                  {link.label}
-                </a>
-                {i < arr.length - 1 && (
-                  <span className="text-[var(--border-secondary)] select-none">—</span>
-                )}
-              </span>
+              { label: 'GitHub', href: 'https://github.com/NitinGavhane', Icon: Github },
+              { label: 'LinkedIn', href: 'https://www.linkedin.com/in/nitinsgavhane/', Icon: Linkedin },
+              { label: 'Twitter', href: 'https://x.com/NitinGavhane_', Icon: Twitter },
+              { label: 'Medium', href: 'https://nitingavhane.medium.com/', Icon: MediumIcon },
+            ].map(({ label, href, Icon }) => (
+              <a
+                key={label}
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={label}
+                className="w-10 h-10 border border-[var(--border-primary)] flex items-center justify-center text-[var(--text-tertiary)] hover:text-[var(--text-primary)] hover:border-[var(--border-secondary)] transition-colors duration-200"
+              >
+                <Icon size={16} />
+              </a>
             ))}
           </div>
 
