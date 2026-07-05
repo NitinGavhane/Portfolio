@@ -16,7 +16,6 @@
     "@emailjs/browser": "^4.4.1",
     "@supabase/supabase-js": "^2.108.1",
     "date-fns": "^3.6.0",
-    "emailjs-com": "^3.2.0",
     "lucide-react": "^0.344.0",
     "react": "^18.3.1",
     "react-datepicker": "^4.25.0",
