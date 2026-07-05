@@ -83,20 +83,22 @@ const ClickableCard: React.FC<ClickableCardProps> = ({
     >
       {/* Image */}
       {image && (
-        <div className="relative h-40 overflow-hidden border-b border-[var(--border-primary)]">
+        <div className="relative h-44 overflow-hidden border-b border-[var(--border-primary)]">
           <img
             src={image}
             alt={title}
-            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.04]"
+            className="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.06]"
             loading="lazy"
           />
+          {/* Bottom scrim for legibility */}
+          <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-black/55 to-transparent pointer-events-none" />
           {category && (
-            <span className="absolute bottom-3 left-3 tag bg-[var(--bg-primary)]">
+            <span className="absolute bottom-3 left-3 inline-block px-2.5 py-1 text-[10px] font-medium uppercase tracking-[0.12em] text-white bg-white/10 backdrop-blur-md border border-white/25 rounded-sm">
               {category}
             </span>
           )}
           {interactive && (
-            <span className="absolute top-3 right-3 p-1.5 bg-[var(--bg-primary)] border border-[var(--border-primary)] text-[var(--text-primary)]">
+            <span className="absolute top-3 right-3 p-1.5 bg-[var(--bg-primary)]/90 backdrop-blur-sm border border-[var(--border-primary)] text-[var(--text-primary)] opacity-0 -translate-y-1 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0">
               <ExternalLink size={12} />
             </span>
           )}
@@ -105,7 +107,7 @@ const ClickableCard: React.FC<ClickableCardProps> = ({
 
       {/* Content */}
       <div className="p-5 flex flex-col flex-1">
-        <h3 className="font-serif text-lg text-[var(--text-primary)] mb-2 line-clamp-2">
+        <h3 className="font-serif text-lg leading-snug text-[var(--text-primary)] mb-2 line-clamp-2 min-h-[3.25rem] transition-colors duration-200 group-hover:text-[var(--text-primary)] decoration-[var(--border-secondary)] underline-offset-4 group-hover:underline">
           {title}
         </h3>
 
@@ -114,13 +116,16 @@ const ClickableCard: React.FC<ClickableCardProps> = ({
         </p>
 
         {/* Metadata */}
-        {metadata && (
-          <div className="flex items-center flex-wrap gap-x-4 gap-y-1 text-xs text-[var(--text-muted)] mb-4">
+        {metadata && (metadata.date || metadata.readTime || metadata.author) && (
+          <div className="flex items-center flex-wrap gap-x-2 gap-y-1 text-xs text-[var(--text-muted)] mb-4">
             {metadata.date && (
               <span className="flex items-center gap-1">
                 <Calendar size={11} />
                 {metadata.date}
               </span>
+            )}
+            {metadata.date && metadata.readTime && (
+              <span className="text-[var(--border-secondary)]" aria-hidden="true">·</span>
             )}
             {metadata.readTime && (
               <span className="flex items-center gap-1">
@@ -129,7 +134,7 @@ const ClickableCard: React.FC<ClickableCardProps> = ({
               </span>
             )}
             {metadata.author && (
-              <span className="flex items-center gap-1">
+              <span className="flex items-center gap-1 ml-auto">
                 <User size={11} />
                 {metadata.author}
               </span>
