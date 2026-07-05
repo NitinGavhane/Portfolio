@@ -10,7 +10,7 @@ let loading = false;
 export function loadAdSense(): boolean {
   if (!siteConfig.adsenseClient) return false;
   if (typeof document === 'undefined') return false;
-  if (loading || document.querySelector('script[data-adsense-loader]')) return true;
+  if (loading || document.querySelector('script[data-adsense-loader]') || document.querySelector('script[src*="pagead2.googlesyndication.com"]')) return true;
 
   loading = true;
 
